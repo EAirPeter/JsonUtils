@@ -2,7 +2,7 @@ package moe.eairpeter.jsonutils.parsed;
 
 public class JsonBool extends JsonBase {
 
-	private boolean data = false;
+	public boolean data = false;
 	
 	public JsonBool() {
 	}
