@@ -336,7 +336,8 @@ public final class JsonParser {
 					++clne;
 					ccol = 0;
 				}
-				++ccol;
+				else
+					++ccol;
 			}
 			while (Character.isWhitespace(cchr));
 		}
