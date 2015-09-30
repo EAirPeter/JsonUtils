@@ -14,7 +14,7 @@ public class ParserError {
 	
 	@Override
 	public String toString() {
-		return "Error at " + line + ":" + column + ", description: ";
+		return "Error at " + line + ":" + column + ", description: " + message;
 	}
 	
 }
