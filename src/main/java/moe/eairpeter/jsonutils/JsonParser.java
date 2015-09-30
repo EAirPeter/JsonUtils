@@ -203,18 +203,93 @@ public final class JsonParser {
 	}
 	
 	private JsonNumber xParseNumber(boolean construct) {
-		//TODO implement
+		if (construct) {
+			StringBuilder sb = new StringBuilder();
+			if (cchr == '-') {
+				sb.append(cchr);
+				xxNext();
+			}
+			if (Character.isDigit(cchr)) {
+				sb.append(cchr);
+				if (cchr != '0')
+					while (Character.isDigit(xxNext()))
+						sb.append(cchr);
+				if (cchr == '.') {
+					sb.append(cchr);
+					while (Character.isDigit(xxNext()))
+						sb.append(cchr);
+				}
+				if (cchr == 'E' || cchr == 'e') {
+					sb.append(cchr);
+					xxNext();
+					if (cchr == '+' || cchr == '-') {
+						sb.append(cchr);
+						xxNext();
+					}
+					while (Character.isDigit(xxNext()))
+						sb.append(cchr);
+				}
+			}
+			else
+				eUnknown("number");
+			return new JsonNumber(Double.valueOf(sb.toString()));
+		}
+		if (cchr == '-')
+			xxNext();
+		if (Character.isDigit(cchr)) {
+			if (cchr != '0')
+				while (Character.isDigit(xxNext()));
+			if (cchr == '.')
+				while (Character.isDigit(xxNext()));
+			if (cchr == 'E' || cchr == 'e') {
+				xxNext();
+				if (cchr == '+' || cchr == '-')
+					xxNext();
+				while (Character.isDigit(xxNext()));
+			}
+		}
+		else
+			eUnknown("number");
 		return null;
 	}
 	
 	private JsonBool xParseBool(boolean construct) {
-		//TODO implement
+		switch (cchr) {
+		case 't':
+			if (xParseMatch("true") && xParseToEnd())
+				return construct ? new JsonBool(true) : null;
+		case 'f':
+			if (xParseMatch("false") && xParseToEnd())
+				return construct ? new JsonBool(false) : null;
+		default:
+			break;
+		}
+		eUnknown("value");
+		xParseToEnd();
 		return null;
 	}
 	
 	private JsonBase xParseNull(boolean construct) {
-		//TODO implement
+		if (xParseMatch("null") && xParseToEnd())
+			return null;
+		eUnknown("value");
 		return null;
+	}
+	
+	private boolean xParseMatch(String string) {
+		for (int i = 0; i < string.length(); ++i, xxNext())
+			if (string.charAt(i) != cchr)
+				return false;
+		return true;
+	}
+	
+	private boolean xParseToEnd() {
+		boolean res = true;
+		while (Character.isJavaIdentifierPart(cchr)) {
+			xxNext();
+			res = false;
+		}
+		return res;
 	}
 	
 	private void xPrepare() {
