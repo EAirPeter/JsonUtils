@@ -371,11 +371,11 @@ public final class JsonParser {
 		error("Unknown " + what + " found");
 	}
 	
-	private String byCP(int codepoint) {
+	private static String byCP(int codepoint) {
 		if (codepoint == -1)
 			return "(EOF)";
 		else
-			return String.valueOf(Character.toChars(cchr));
+			return String.valueOf(Character.toChars(codepoint));
 	}
 	
 }
