@@ -13,7 +13,7 @@ public class JsonNumber extends JsonBase {
 	
 	@Override
 	public String toString() {
-		return String.valueOf(data);
+		return data == (int) data ? String.valueOf((int) data) : String.valueOf(data);
 	}
 	
 	@Override
