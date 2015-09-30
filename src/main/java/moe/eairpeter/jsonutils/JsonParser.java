@@ -2,6 +2,7 @@ package moe.eairpeter.jsonutils;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,10 +109,10 @@ public final class JsonParser {
 			xxNext();
 			JsonBase value = xParseValue(construct);
 			if (construct) {
-				if (res.data.containsKey(string))
+				if (res.set.contains(string.data))
 					eRemapping(string.data);
 				else
-					res.data.put(string, value);
+					res.data.add(new SimpleEntry<JsonString, JsonBase>(string, value));
 			}
 			if (cchr != ',')
 				break;
