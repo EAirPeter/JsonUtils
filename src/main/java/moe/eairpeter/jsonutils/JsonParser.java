@@ -104,7 +104,6 @@ public final class JsonParser {
 		JsonObject res = construct ? new JsonObject() : null;
 		while (xxNext() != '}') {
 			JsonString string = xParseString(construct);
-			xxNext();
 			xxExpect(':');
 			xxNext();
 			JsonBase value = xParseValue(construct);
@@ -133,7 +132,7 @@ public final class JsonParser {
 			if (cchr != ',')
 				break;
 		}
-		xxExpect('}');
+		xxExpect(']');
 		xxNext();
 		return res;
 		
@@ -219,28 +218,28 @@ public final class JsonParser {
 		if (construct) {
 			StringBuilder sb = new StringBuilder();
 			if (cchr == '-') {
-				sb.append(cchr);
+				sb.append(byCP(cchr));
 				xxNext();
 			}
 			if (Character.isDigit(cchr)) {
-				sb.append(cchr);
+				sb.append(byCP(cchr));
 				if (cchr != '0')
 					while (Character.isDigit(xxNext()))
-						sb.append(cchr);
+						sb.append(byCP(cchr));
 				if (cchr == '.') {
-					sb.append(cchr);
+					sb.append(byCP(cchr));
 					while (Character.isDigit(xxNext()))
-						sb.append(cchr);
+						sb.append(byCP(cchr));
 				}
 				if (cchr == 'E' || cchr == 'e') {
-					sb.append(cchr);
+					sb.append(byCP(cchr));
 					xxNext();
 					if (cchr == '+' || cchr == '-') {
-						sb.append(cchr);
+						sb.append(byCP(cchr));
 						xxNext();
 					}
 					while (Character.isDigit(xxNext()))
-						sb.append(cchr);
+						sb.append(byCP(cchr));
 				}
 			}
 			else
@@ -360,7 +359,7 @@ public final class JsonParser {
 	}
 	
 	private void eExpected(int chr) {
-		error("\'" + byCP(cchr) + "\' expected, but \'" + byCP(cchr) + "\' found");
+		error("\'" + byCP(chr) + "\' expected, but \'" + byCP(cchr) + "\' found");
 	}
 	
 	private void eRemapping(String key) {
