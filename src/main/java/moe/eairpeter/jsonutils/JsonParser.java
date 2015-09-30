@@ -100,7 +100,7 @@ public final class JsonParser {
 	
 	private JsonObject xParseObject(boolean construct) {
 		if (!xxExpect('{'))
-			return null;;
+			throw new RuntimeException("Failed to parse");
 		JsonObject res = construct ? new JsonObject() : null;
 		while (xxNext() != '}') {
 			JsonString string = xParseString(construct);
@@ -123,7 +123,7 @@ public final class JsonParser {
 	
 	private JsonArray xParseArray(boolean construct) {
 		if (!xxExpect('['))
-			return null;
+			throw new RuntimeException("Failed to parse");
 		JsonArray res = construct ? new JsonArray() : null;
 		while (xxNext() != ']') {
 			JsonBase value = xParseValue(construct);
@@ -140,7 +140,7 @@ public final class JsonParser {
 	
 	private JsonString xParseString(boolean construct) {
 		if (!xxExpect('\"'))
-			return null;
+			throw new RuntimeException("Failed to parse");
 		JsonString res = construct ? new JsonString() : null;
 		if (construct) {
 			StringBuilder sb = new StringBuilder();
