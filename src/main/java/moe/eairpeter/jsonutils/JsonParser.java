@@ -3,6 +3,7 @@ package moe.eairpeter.jsonutils;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 
 import moe.eairpeter.jsonutils.parsed.JsonArray;
 import moe.eairpeter.jsonutils.parsed.JsonBase;
@@ -21,6 +22,15 @@ public final class JsonParser {
 
 	public JsonParser(Reader reader) {
 		in = reader;
+		xxNext();
+	}
+	
+	public boolean succeeded() {
+		return errors.isEmpty();
+	}
+	
+	public List<ParserError> errors() {
+		return errors;
 	}
 	
 	public JsonBase parseValue(boolean construct) {
@@ -89,7 +99,8 @@ public final class JsonParser {
 	}
 	
 	private JsonObject xParseObject(boolean construct) {
-		xxExpect('{');
+		if (!xxExpect('{'))
+			return null;;
 		JsonObject res = construct ? new JsonObject() : null;
 		while (xxNext() != '}') {
 			JsonString string = xParseString(construct);
@@ -112,7 +123,8 @@ public final class JsonParser {
 	}
 	
 	private JsonArray xParseArray(boolean construct) {
-		xxExpect('[');
+		if (!xxExpect('['))
+			return null;
 		JsonArray res = construct ? new JsonArray() : null;
 		while (xxNext() != ']') {
 			JsonBase value = xParseValue(construct);
@@ -128,7 +140,8 @@ public final class JsonParser {
 	}
 	
 	private JsonString xParseString(boolean construct) {
-		xxExpect('\"');
+		if (!xxExpect('\"'))
+			return null;
 		JsonString res = construct ? new JsonString() : null;
 		if (construct) {
 			StringBuilder sb = new StringBuilder();
@@ -294,12 +307,14 @@ public final class JsonParser {
 	
 	private void xPrepare() {
 		errors.clear();
-		xxNext();
+		//xxNext();
 	}
 	
-	private void xxExpect(int chr) {
-		if (cchr != chr)
-			eExpected(chr);
+	private boolean xxExpect(int chr) {
+		if (cchr == chr)
+			return true;
+		eExpected(chr);
+		return false;
 	}
 	
 	private int xxNextHex() {
