@@ -223,7 +223,9 @@ public final class JsonParser {
 			}
 			if (Character.isDigit(cchr)) {
 				sb.append(byCP(cchr));
-				if (cchr != '0')
+				if (cchr == '0')
+					xxNext();
+				else
 					while (Character.isDigit(xxNext()))
 						sb.append(byCP(cchr));
 				if (cchr == '.') {
