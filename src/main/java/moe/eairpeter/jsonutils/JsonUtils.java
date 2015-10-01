@@ -6,12 +6,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import moe.eairpeter.jsonutils.parsed.JsonArray;
 import moe.eairpeter.jsonutils.parsed.JsonBase;
 import moe.eairpeter.jsonutils.parsed.JsonBool;
 import moe.eairpeter.jsonutils.parsed.JsonNumber;
 import moe.eairpeter.jsonutils.parsed.JsonObject;
+import moe.eairpeter.jsonutils.parsed.JsonString;
 
 public class JsonUtils {
 	
@@ -607,5 +611,105 @@ public class JsonUtils {
 	}
 	
 	//Finally, I found that Windows Notepad is a good editor
+	
+	//Don't ask me "Why do you use reflect"
+	//^=Although reflect sucks, I have no other choice
+	
+	public static JsonBase toJson(Object obj) {
+		if (obj == null)
+			return null;
+		
+		if (obj instanceof Byte)
+			return toJson((byte) obj);
+		if (obj instanceof Character)
+			return toJson((char) obj);
+		if (obj instanceof char[])
+			return toJson((char[]) obj);
+		if (obj instanceof Double)
+			return toJson((double) obj);
+		if (obj instanceof Float)
+			return toJson((float) obj);
+		if (obj instanceof Integer)
+			return toJson((int) obj);
+		if (obj instanceof Long)
+			return toJson((long) obj);
+		if (obj instanceof Short)
+			return toJson((short) obj);
+		if (obj instanceof String)
+			return toJson((String) obj);
+		
+		if (obj instanceof Map)
+			return toJson((Map<?, ?>) obj);
+		if (obj instanceof List)
+			return toJson((List<?>) obj);
+		if (obj instanceof Object[])
+			return toJson((Object[]) obj);
+		
+		throw new IllegalArgumentException("Unsupported type: " + obj.getClass().getName());
+		
+	}
+	
+	public static JsonNumber toJson(byte b) {
+		return new JsonNumber(b);
+	}
+	
+	public static JsonString toJson(char c) {
+		return new JsonString(String.valueOf(c));
+	}
+	
+	public static JsonString toJson(char[] data) {
+		return new JsonString(String.valueOf(data));
+	}
+	
+	public static JsonNumber toJson(double d) {
+		return new JsonNumber(d);
+	}
+	
+	public static JsonNumber toJson(float f) {
+		return new JsonNumber(f);
+	}
+	
+	public static JsonNumber toJson(int i) {
+		return new JsonNumber(i);
+	}
+	
+	public static JsonNumber toJson(long l) {
+		return new JsonNumber(l);
+	}
+	
+	public static JsonNumber toJson(short s) {
+		return new JsonNumber(s);
+	}
+	
+	public static JsonString toJson(String str) {
+		return new JsonString(str);
+	}
+	
+	public static JsonObject toJson(Map<?, ?> map) {
+		JsonObject res = new JsonObject();
+		for (Entry<?, ?> e : map.entrySet()) {
+			Object string = e.getKey();
+			Object value = e.getValue();
+			if (string == null)
+				return null;
+			res.put(new JsonString(string.toString()), toJson(value));
+			
+		}
+		return res;
+	}
+	
+	public static JsonArray toJson(List<?> list) {
+		JsonArray res = new JsonArray();
+		for (Object o : list)
+			res.data.add(toJson(o));
+		return res;
+	}
+	
+	public static JsonArray toJson(Object[] objs) {
+		JsonArray res = new JsonArray();
+		for (Object o : objs)
+			res.data.add(toJson(o));
+		return res;
+	}
 	
 }

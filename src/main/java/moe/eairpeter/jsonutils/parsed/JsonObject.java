@@ -2,6 +2,7 @@ package moe.eairpeter.jsonutils.parsed;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -11,6 +12,14 @@ public class JsonObject extends JsonBase {
 	public final HashSet<String> set = new HashSet<String>();
 	
 	public JsonObject() {
+	}
+	
+	public boolean put(JsonString string, JsonBase value) {
+		if (set.contains(string.data))
+			return false;
+		set.add(string.data);
+		data.add(new SimpleEntry<JsonString, JsonBase>(string, value));
+		return true;
 	}
 	
 	@Override

@@ -113,12 +113,8 @@ public final class JsonParser {
 			xxExpect(':');
 			xxNext();
 			JsonBase value = xParseValue(construct);
-			if (construct) {
-				if (res.set.contains(string.data))
-					eRemapping(string.data);
-				else
-					res.data.add(new SimpleEntry<JsonString, JsonBase>(string, value));
-			}
+			if (construct && !res.put(string, value))
+				eRemapping(string.data);
 			if (cchr != ',')
 				break;
 		}
