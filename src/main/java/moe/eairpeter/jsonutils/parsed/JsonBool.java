@@ -12,6 +12,11 @@ public class JsonBool extends JsonBase {
 	}
 	
 	@Override
+	public Boolean unwrap() {
+		return data;
+	}
+	
+	@Override
 	public String toString() {
 		return data ? "true" : "false";
 	}

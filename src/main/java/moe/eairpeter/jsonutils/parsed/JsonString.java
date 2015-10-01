@@ -12,6 +12,11 @@ public class JsonString extends JsonBase {
 	}
 	
 	@Override
+	public String unwrap() {
+		return data;
+	}
+	
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder().append('\"');
 		for (int i = 0; i < data.length(); ++i)

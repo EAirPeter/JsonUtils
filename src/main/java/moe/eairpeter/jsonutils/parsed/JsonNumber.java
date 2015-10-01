@@ -12,6 +12,11 @@ public class JsonNumber extends JsonBase {
 	}
 	
 	@Override
+	public Double unwrap() {
+		return data;
+	}
+	
+	@Override
 	public String toString() {
 		return data == (int) data ? String.valueOf((int) data) : String.valueOf(data);
 	}

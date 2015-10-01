@@ -802,4 +802,24 @@ public class JsonUtils {
 		return res;
 	}
 	
+	public static Object unwrap(JsonBase json) {
+		return json == null ? null : json.unwrap();
+	}
+	
+	public static Map<String, ?> unwrap(JsonObject json) {
+		return json == null ? null : json.unwrap();
+	}
+	
+	public static Object[] unwrap(JsonArray json) {
+		return json == null ? null : json.unwrap();
+	}
+	
+	public static Double unwrap(JsonNumber json) {
+		return json == null ? null : json.unwrap();
+	}
+	
+	public static Boolean unwrap(JsonBool json) {
+		return json == null ? null : json.unwrap();
+	}
+	
 }

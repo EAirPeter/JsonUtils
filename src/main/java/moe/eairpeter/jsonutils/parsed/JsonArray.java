@@ -31,6 +31,16 @@ public class JsonArray extends JsonBase {
 		data.add(JsonUtils.toJson(value));
 	}
 	
+	
+	@Override
+	public Object[] unwrap() {
+		Object[] res = new Object[data.size()];
+		int i = 0;
+		for (JsonBase v : data)
+			res[i++] = v.unwrap();
+		return res;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder().append('[');
