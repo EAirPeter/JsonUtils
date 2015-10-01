@@ -29,7 +29,7 @@ public class JsonArray extends JsonBase {
 				first = false;
 			else
 				sb.append(',');
-			sb.append(v.toString());
+			sb.append(v);
 		}
 		return sb.append(']').toString();
 	}

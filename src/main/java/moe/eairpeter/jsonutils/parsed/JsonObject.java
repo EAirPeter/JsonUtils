@@ -22,7 +22,7 @@ public class JsonObject extends JsonBase {
 				first = false;
 			else
 				sb.append(',');
-			sb.append(p.getKey().toString()).append(':').append(p.getValue().toString());
+			sb.append(p.getKey()).append(':').append(p.getValue());
 		}
 		return sb.append('}').toString();
 	}

@@ -34,46 +34,51 @@ public final class JsonParser {
 		return errors;
 	}
 	
-	public JsonBase parseValue(boolean construct) {
+	public ParserResult<JsonBase> parseValue(boolean construct) {
 		xPrepare();
 		JsonBase res = xParseValue(construct);
-		return errors.isEmpty() ? res : null;
+		return errors.isEmpty() ? new ParserResult<JsonBase>(res, true, null) : new ParserResult<JsonBase>(null, false, errors);
 	}
 	
-	public JsonObject parseObject(boolean construct) {
+	public ParserResult<JsonObject> parseObject(boolean construct) {
 		xPrepare();
 		JsonObject res = xParseObject(construct);
-		return errors.isEmpty() ? res : null;
+		return errors.isEmpty() ? new ParserResult<JsonObject>(res, true, null) : new ParserResult<JsonObject>(null, false, errors);
 	}
 	
-	public JsonArray parseArray(boolean construct) {
+	public ParserResult<JsonArray> parseArray(boolean construct) {
 		xPrepare();
 		JsonArray res = xParseArray(construct);
-		return errors.isEmpty() ? res : null;
+		return errors.isEmpty() ? new ParserResult<JsonArray>(res, true, null) : new ParserResult<JsonArray>(null, false, errors);
 	}
 	
-	public JsonString parseString(boolean construct) {
+	public ParserResult<JsonString> parseString(boolean construct) {
 		xPrepare();
 		JsonString res = xParseString(construct);
-		return errors.isEmpty() ? res : null;
+		return errors.isEmpty() ? new ParserResult<JsonString>(res, true, null) : new ParserResult<JsonString>(null, false, errors);
 	}
 	
-	public JsonNumber parseNumber(boolean construct) {
+	public ParserResult<JsonNumber> parseNumber(boolean construct) {
 		xPrepare();
 		JsonNumber res = xParseNumber(construct);
-		return errors.isEmpty() ? res : null;
+		return errors.isEmpty() ? new ParserResult<JsonNumber>(res, true, null) : new ParserResult<JsonNumber>(null, false, errors);
 	}
 	
-	public JsonBool parseBool(boolean construct) {
+	public ParserResult<JsonBool> parseBool(boolean construct) {
 		xPrepare();
 		JsonBool res = xParseBool(construct);
-		return errors.isEmpty() ? res : null;
+		return errors.isEmpty() ? new ParserResult<JsonBool>(res, true, null) : new ParserResult<JsonBool>(null, false, errors);
 	}
 	
-	public boolean parseNull(boolean construct) {
+	public ParserResult<JsonBase> parseNull(boolean construct) {
 		xPrepare();
 		xParseNull(construct);
-		return errors.isEmpty();
+		return errors.isEmpty() ? new ParserResult<JsonBase>(null, true, null) : new ParserResult<JsonBase>(null, false, errors);
+	}
+	
+	public <JsonParsed extends JsonBase> ParserResult<JsonParsed> parseEOF() {
+		xPrepare();
+		return xxExpect(-1) ? new ParserResult<JsonParsed>(null, true, null) : new ParserResult<JsonParsed>(null, false, errors);
 	}
 	
 	private JsonBase xParseValue(boolean construct) {
@@ -345,7 +350,7 @@ public final class JsonParser {
 			while (Character.isWhitespace(cchr));
 		}
 		catch (IOException e) {
-			throw new RuntimeException("Unexpected IOException caught during JSON parsing", e);
+			raiseUnexpected(e);
 		}
 		return cchr;
 	}
@@ -379,6 +384,14 @@ public final class JsonParser {
 			return "(EOF)";
 		else
 			return String.valueOf(Character.toChars(codepoint));
+	}
+	
+	static void raiseUnexpected(Throwable cause) {
+		raise("Caught unexpected " + cause.getClass().getSimpleName(), cause);
+	}
+	
+	static void raise(String message, Throwable cause) {
+		throw new RuntimeException("Failed to parse, message :" + message, cause);
 	}
 	
 }
