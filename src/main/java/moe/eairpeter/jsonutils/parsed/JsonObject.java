@@ -6,6 +6,8 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import moe.eairpeter.jsonutils.JsonUtils;
+
 public class JsonObject extends JsonBase {
 
 	public final ArrayList<Entry<JsonString, JsonBase>> data = new ArrayList<Entry<JsonString, JsonBase>>();
@@ -19,6 +21,14 @@ public class JsonObject extends JsonBase {
 			return false;
 		set.add(string.data);
 		data.add(new SimpleEntry<JsonString, JsonBase>(string, value));
+		return true;
+	}
+	
+	public boolean put(String string, Object value) {
+		if (set.contains(string))
+			return false;
+		set.add(string);
+		data.add(new SimpleEntry<JsonString, JsonBase>(new JsonString(string), JsonUtils.toJson(value)));
 		return true;
 	}
 	

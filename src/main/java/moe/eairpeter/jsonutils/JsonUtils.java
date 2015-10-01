@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -618,13 +619,15 @@ public class JsonUtils {
 	public static JsonBase toJson(Object obj) {
 		if (obj == null)
 			return null;
+		if (obj instanceof JsonBase)
+			return (JsonBase) obj;
 		
+		if (obj instanceof Boolean)
+			return toJson((boolean) obj);
 		if (obj instanceof Byte)
 			return toJson((byte) obj);
 		if (obj instanceof Character)
 			return toJson((char) obj);
-		if (obj instanceof char[])
-			return toJson((char[]) obj);
 		if (obj instanceof Double)
 			return toJson((double) obj);
 		if (obj instanceof Float)
@@ -635,9 +638,29 @@ public class JsonUtils {
 			return toJson((long) obj);
 		if (obj instanceof Short)
 			return toJson((short) obj);
+		
+		if (obj instanceof boolean[])
+			return toJson((boolean[]) obj);
+		if (obj instanceof byte[])
+			return toJson((byte[]) obj);
+		if (obj instanceof char[])
+			return toJson((char[]) obj);
+		if (obj instanceof double[])
+			return toJson((double[]) obj);
+		if (obj instanceof float[])
+			return toJson((float[]) obj);
+		if (obj instanceof int[])
+			return toJson((int[]) obj);
+		if (obj instanceof long[])
+			return toJson((long[]) obj);
+		if (obj instanceof short[])
+			return toJson((short[]) obj);
+		
 		if (obj instanceof String)
 			return toJson((String) obj);
 		
+		if (obj instanceof Entry)
+			return toJson((Entry<?, ?>) obj);
 		if (obj instanceof Map)
 			return toJson((Map<?, ?>) obj);
 		if (obj instanceof List)
@@ -645,8 +668,22 @@ public class JsonUtils {
 		if (obj instanceof Object[])
 			return toJson((Object[]) obj);
 		
-		throw new IllegalArgumentException("Unsupported type: " + obj.getClass().getName());
+		try {
+			Class<?> clazz = obj.getClass();
+			Method mToJson = clazz.getMethod("toJson");
+			Object res = mToJson.invoke(obj);
+			if (res instanceof JsonBase)
+				return (JsonBase) res;
+			throw new RuntimeException("obj.toJson() must return <? extends JsonBase>");
+		}
+		catch (Throwable e) {
+			throw new IllegalArgumentException("Unsupported type: " + obj.getClass().getName(), e);
+		}
 		
+	}
+	
+	public static JsonBool toJson(boolean b) {
+		return new JsonBool(b);
 	}
 	
 	public static JsonNumber toJson(byte b) {
@@ -655,10 +692,6 @@ public class JsonUtils {
 	
 	public static JsonString toJson(char c) {
 		return new JsonString(String.valueOf(c));
-	}
-	
-	public static JsonString toJson(char[] data) {
-		return new JsonString(String.valueOf(data));
 	}
 	
 	public static JsonNumber toJson(double d) {
@@ -681,8 +714,65 @@ public class JsonUtils {
 		return new JsonNumber(s);
 	}
 	
+	public static JsonArray toJson(boolean[] bs) {
+		JsonArray res = new JsonArray();
+		for (boolean b : bs)
+			res.add(new JsonBool(b));
+		return res;
+	}
+	
+	public static JsonArray toJson(byte[] bs) {
+		JsonArray res = new JsonArray();
+		for (byte b : bs)
+			res.add(new JsonNumber(b));
+		return res;
+	}
+	
+	public static JsonString toJson(char[] cs) {
+		return new JsonString(String.valueOf(cs));
+	}
+	
 	public static JsonString toJson(String str) {
 		return new JsonString(str);
+	}
+	
+	public static JsonArray toJson(double[] ds) {
+		JsonArray res = new JsonArray();
+		for (double d : ds)
+			res.add(new JsonNumber(d));
+		return res;
+	}
+	
+	public static JsonArray toJson(float[] fs) {
+		JsonArray res = new JsonArray();
+		for (float f : fs)
+			res.add(new JsonNumber(f));
+		return res;
+	}
+	
+	public static JsonArray toJson(int[] is) {
+		JsonArray res = new JsonArray();
+		for (double i : is)
+			res.add(new JsonNumber(i));
+		return res;
+	}
+	
+	public static JsonArray toJson(long[] ls) {
+		JsonArray res = new JsonArray();
+		for (double l : ls)
+			res.add(new JsonNumber(l));
+		return res;
+	}
+	
+	public static JsonArray toJson(short[] ss) {
+		JsonArray res = new JsonArray();
+		for (double s : ss)
+			res.add(new JsonNumber(s));
+		return res;
+	}
+	
+	public static JsonArray toJson(Entry<?, ?> entry) {
+		return new JsonArray(entry.getKey(), entry.getValue());
 	}
 	
 	public static JsonObject toJson(Map<?, ?> map) {
