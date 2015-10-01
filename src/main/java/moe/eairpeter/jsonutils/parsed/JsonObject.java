@@ -34,7 +34,7 @@ public class JsonObject extends JsonBase {
 	}
 	
 	@Override
-	public Map<String, ?> unwrap() {
+	public Map<String, Object> unwrap() {
 		HashMap<String, Object> res = new HashMap<String, Object>();
 		for (Entry<JsonString, JsonBase> e : data)
 			res.put(e.getKey().data, JsonUtils.unwrap(e.getValue()));

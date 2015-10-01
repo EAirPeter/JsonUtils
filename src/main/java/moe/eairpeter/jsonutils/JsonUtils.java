@@ -806,7 +806,7 @@ public class JsonUtils {
 		return json == null ? null : json.unwrap();
 	}
 	
-	public static Map<String, ?> unwrap(JsonObject json) {
+	public static Map<String, Object> unwrap(JsonObject json) {
 		return json == null ? null : json.unwrap();
 	}
 	
