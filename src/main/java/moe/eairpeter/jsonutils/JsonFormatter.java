@@ -63,7 +63,7 @@ public class JsonFormatter {
 	public static final int WS_RSQUARE	= 0x00010000;
 	
 	//Insert a new space between an empty '[]'
-	public static final int WS_ESQURAE	= 0x00020000;
+	public static final int WS_ESQUARE	= 0x00020000;
 	
 	//Insert a new space before ':'
 	public static final int WS_BCOLON	= 0x00040000;
@@ -199,12 +199,61 @@ public class JsonFormatter {
 				sb.append(' ');
 			xFormatValue(sb, e.getValue(), ind);
 		}
-		
 		if (enabled(LF_RBRACE))
 			sb.append(ind);
 		else if (enabled(WS_RBRACE))
 			sb.append(' ');
 		return sb.append('}');
+	}
+	
+	private StringBuilder xFormatArray(StringBuilder sb, JsonArray json, String ind) {
+		sb.append('[');
+		if (json.data.isEmpty()) {
+			if (enabled(LF_ESQUARE))
+				sb.append(ind);
+			else if (enabled(WS_ESQUARE))
+				sb.append(' ');
+			return sb.append(']');
+		}
+		String sub = ind + indent;
+		if (enabled(LF_LSQUARE))
+			sb.append(sub);
+		else if (enabled(WS_LSQUARE))
+			sb.append(' ');
+		boolean first = true;
+		for (JsonBase v : json.data) {
+			if (first)
+				first = false;
+			else {
+				if (enabled(LF_BACOMMA))
+					sb.append(sub);
+				else if (enabled(WS_BACOMMA))
+					sb.append(' ');
+				sb.append(',');
+				if (enabled(LF_AACOMMA))
+					sb.append(sub);
+				else if (enabled(WS_AACOMMA))
+					sb.append(' ');
+			}
+			xFormatValue(sb, v, sub);
+		}
+		if (enabled(LF_RSQUARE))
+			sb.append(ind);
+		else if (enabled(WS_RSQUARE))
+			sb.append(' ');
+		return sb.append(']');
+	}
+	
+	private StringBuilder xFormatString(StringBuilder sb, JsonString json, String ind) {
+		return sb.append(json.toString());
+	}
+	
+	private StringBuilder xFormatNumber(StringBuilder sb, JsonNumber json, String ind) {
+		return sb.append(json.toString());
+	}
+	
+	private StringBuilder xFormatBool(StringBuilder sb, JsonBool json, String ind) {
+		return sb.append(json.toString());
 	}
 	
 	private boolean enabled(int option) {
