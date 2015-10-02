@@ -1,0 +1,36 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+ext.configFile = file 'build.properties'
+
+configFile.withReader {
+	def prop = new Properties()
+	prop.load(it)
+	project.ext.config = new ConfigSlurper().parse prop
+}
+
+version				= config.module_ver
+group				= config.module_group
+archivesBaseName	= config.module_name
+
+sourceCompatibility	= 1.8
+targetCompatibility	= 1.8
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+task sourceJar(type: Jar, dependsOn: 'jar') {
+	classifier 'src'
+	from sourceSets.main.allSource
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = 2.7
+}
+
+artifacts {
+	archives jar
+	archives sourceJar
+}
+

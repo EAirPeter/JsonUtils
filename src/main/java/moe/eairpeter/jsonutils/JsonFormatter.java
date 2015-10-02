@@ -84,7 +84,7 @@ public class JsonFormatter {
 	public static final int WS_AACOMMA	= 0x00800000;
 
 	//Default format
-	public static final int JF_DEFAULT	= LF_LBRACE | LF_RBRACE | LF_AOCOMMA | WS_LSQUARE | WS_RSQUARE | WS_BCOLON | WS_ACOLON | WS_AACOMMA;
+	public static final int JF_DEFAULT	= LF_LBRACE | LF_RBRACE | LF_AOCOMMA | WS_LSQUARE | WS_RSQUARE | WS_ACOLON | WS_AACOMMA;
 	
 	private int format = 0;
 	private String indent = null;
