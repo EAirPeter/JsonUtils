@@ -10,7 +10,7 @@ public class ParserResult <JsonParsed extends JsonBase> {
 	public ParserResult(JsonParsed result_, boolean succeeded_, List<ParserError> errors_) {
 		result = result_;
 		succeeded = succeeded_;
-		errors = Collections.unmodifiableList(errors_);
+		errors = errors_ == null ? null : Collections.unmodifiableList(errors_);
 	}
 	
 	public final JsonParsed result;

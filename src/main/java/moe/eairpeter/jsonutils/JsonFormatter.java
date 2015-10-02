@@ -167,9 +167,9 @@ public class JsonFormatter {
 				sb.append(' ');
 			return sb.append('}');
 		}
-		String sub = ind + indent;
+		String sub = ind;
 		if (enabled(LF_LBRACE))
-			sb.append(ind);
+			sb.append(sub = ind + indent);
 		else if (enabled(WS_LBRACE))
 			sb.append(' ');
 		boolean first = true;
@@ -184,7 +184,7 @@ public class JsonFormatter {
 				sb.append(',');
 				if (enabled(LF_AOCOMMA))
 					sb.append(sub);
-				else
+				else if (enabled(WS_AOCOMMA))
 					sb.append(' ');
 			}
 			xFormatString(sb, e.getKey(), ind);
@@ -197,7 +197,7 @@ public class JsonFormatter {
 				sb.append(sub);
 			else if (enabled(WS_ACOLON))
 				sb.append(' ');
-			xFormatValue(sb, e.getValue(), ind);
+			xFormatValue(sb, e.getValue(), sub);
 		}
 		if (enabled(LF_RBRACE))
 			sb.append(ind);
@@ -215,9 +215,9 @@ public class JsonFormatter {
 				sb.append(' ');
 			return sb.append(']');
 		}
-		String sub = ind + indent;
+		String sub = ind;
 		if (enabled(LF_LSQUARE))
-			sb.append(sub);
+			sb.append(sub = ind + indent);
 		else if (enabled(WS_LSQUARE))
 			sb.append(' ');
 		boolean first = true;
