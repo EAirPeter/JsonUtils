@@ -13,8 +13,8 @@ version				= config.module_ver
 group				= config.module_group
 archivesBaseName	= config.module_name
 
-sourceCompatibility	= 1.8
-targetCompatibility	= 1.8
+sourceCompatibility	= 1.7
+targetCompatibility	= 1.7
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'

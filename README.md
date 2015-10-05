@@ -1,8 +1,8 @@
 # JsonUtils
 ---
-Some JSON utilities written with Java.
-This project is licensed under [GPLv3](http://www.gnu.org/licenses/gpl.html).
-This project follows [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+Some JSON utilities written with Java.  
+This project is licensed under [GPLv3](http://www.gnu.org/licenses/gpl.html).  
+This project follows [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).  
 
 ## Features
 1. Translate JSON string or file to JSON values.
