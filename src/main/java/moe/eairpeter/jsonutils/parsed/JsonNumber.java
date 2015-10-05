@@ -1,12 +1,27 @@
 package moe.eairpeter.jsonutils.parsed;
 
+/**
+ * Represents a JSON number.
+ * @author EAirPeter
+ */
 public class JsonNumber extends JsonBase {
 
-	public double data = 0;
+	/**
+	 * The data.
+	 */
+	public double data;
 	
+	/**
+	 * Construct a JSON number {@literal 0}.
+	 */
 	public JsonNumber() {
+		this(0);
 	}
 	
+	/**
+	 * Construct a JSON number with given {@code double}.
+	 * @param data_ The {@code double}.
+	 */
 	public JsonNumber(double data_) {
 		data = data_;
 	}

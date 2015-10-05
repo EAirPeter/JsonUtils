@@ -1,12 +1,25 @@
 package moe.eairpeter.jsonutils;
 
-public class ParserError {
+/**
+ * Representing an error encountered when parsing a JSON.
+ * @author EAirPeter
+ */
+public final class ParserError {
 
+	/**
+	 * The line number when the error encountered.
+	 */
 	public final int line;
+	/**
+	 * The column number when the error encountered.
+	 */
 	public final int column;
+	/**
+	 * The message given by the parser when the error encountered.
+	 */
 	public final String message;
 	
-	public ParserError(int line_, int column_, String message_) {
+	ParserError(int line_, int column_, String message_) {
 		line = line_;
 		column = column_;
 		message = message_;

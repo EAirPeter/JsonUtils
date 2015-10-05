@@ -1,12 +1,27 @@
 package moe.eairpeter.jsonutils.parsed;
 
+/**
+ * Represents a JSON string.
+ * @author EAirPeter
+ */
 public class JsonString extends JsonBase {
 
+	/**
+	 * The data.<br>
+	 * It's shall <strong>NEVER</strong> be {@literal null}.
+	 */
 	public String data = new String();
 	
+	/**
+	 * Construct an JSON string "".
+	 */
 	public JsonString() {
 	}
 	
+	/**
+	 * Construct an JSON string with given {@code String}
+	 * @param data_
+	 */
 	public JsonString(String data_) {
 		data = data_;
 	}

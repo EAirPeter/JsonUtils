@@ -1,12 +1,27 @@
 package moe.eairpeter.jsonutils.parsed;
 
+/**
+ * Represents a JSON {@literal true} or {@literal false} value.
+ * @author EAirPeter
+ */
 public class JsonBool extends JsonBase {
 
-	public boolean data = false;
+	/**
+	 * The data.
+	 */
+	public boolean data;
 	
+	/**
+	 * Construct a JSON {@code false} value.
+	 */
 	public JsonBool() {
+		this(false);
 	}
 	
+	/**
+	 * Construct with given {@code boolean}.
+	 * @param data_ The {@code boolean}.
+	 */
 	public JsonBool(boolean data_) {
 		data = data_;
 	}

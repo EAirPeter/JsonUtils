@@ -18,12 +18,21 @@ import moe.eairpeter.jsonutils.parsed.JsonNumber;
 import moe.eairpeter.jsonutils.parsed.JsonObject;
 import moe.eairpeter.jsonutils.parsed.JsonString;
 
-public class JsonUtils {
+/**
+ * Contains some useful JSON methods.
+ * @author EAirPeter
+ */
+public final class JsonUtils {
 	
 	//Don't ask me "Why don't you use reflect"
 	//^=Reflect sucks, much worse than Java itself
 	
 	//Java sucks!
+	/**
+	 * Construct a JSON value according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON value.
+	 */
 	public static ParserResult<JsonBase> parseValue(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonBase> res = parser.parseValue(true);
@@ -33,6 +42,11 @@ public class JsonUtils {
 		return eof.succeeded ? res : eof;
 	}
 	
+	/**
+	 * Construct a JSON object according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON object.
+	 */
 	public static ParserResult<JsonObject> parseObject(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonObject> res = parser.parseObject(true);
@@ -42,6 +56,11 @@ public class JsonUtils {
 		return eof.succeeded ? res : eof;
 	}
 
+	/**
+	 * Construct a JSON array according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON array.
+	 */
 	public static ParserResult<JsonArray> parseArray(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonArray> res = parser.parseArray(true);
@@ -51,6 +70,25 @@ public class JsonUtils {
 		return eof.succeeded ? res : eof;
 	}
 	
+	/**
+	 * Construct a JSON string according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON string.
+	 */
+	public static ParserResult<JsonString> parseString(Reader reader) {
+		JsonParser parser = new JsonParser(reader);
+		ParserResult<JsonString> res = parser.parseString(true);
+		if (!res.succeeded)
+			return res;
+		ParserResult<JsonString> eof = parser.parseEOF();
+		return eof.succeeded ? res : eof;
+	}
+	
+	/**
+	 * Construct a JSON number according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON number.
+	 */
 	public static ParserResult<JsonNumber> parseNumber(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonNumber> res = parser.parseNumber(true);
@@ -60,6 +98,11 @@ public class JsonUtils {
 		return eof.succeeded ? res : eof;
 	}
 	
+	/**
+	 * Construct a JSON {@literal true} or {@literal false} value according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON {@literal true} or {@literal false} value.
+	 */
 	public static ParserResult<JsonBool> parseBool(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonBool> res = parser.parseBool(true);
@@ -69,6 +112,11 @@ public class JsonUtils {
 		return eof.succeeded ? res : eof;
 	}
 	
+	/**
+	 * Construct a JSON {@literal null} value according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON {@literal null} value.
+	 */
 	public static ParserResult<JsonBase> parseNull(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonBase> res = parser.parseNull(true);
@@ -79,6 +127,11 @@ public class JsonUtils {
 	}
 	
 	//So, Java sucks again...
+	/**
+	 * Construct a JSON value according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON value.
+	 */
 	public static ParserResult<JsonBase> parseValue(String string) {
 		Reader reader = new StringReader(string);
 		ParserResult<JsonBase> res = parseValue(reader);
@@ -90,6 +143,11 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON object according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON object.
+	 */
 	public static ParserResult<JsonObject> parseObject(String string) {
 		Reader reader = new StringReader(string);
 		ParserResult<JsonObject> res = parseObject(reader);
@@ -101,6 +159,11 @@ public class JsonUtils {
 		return res;
 	}	
 	
+	/**
+	 * Construct a JSON array according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON array.
+	 */
 	public static ParserResult<JsonArray> parseArray(String string) {
 		Reader reader = new StringReader(string);
 		ParserResult<JsonArray> res = parseArray(reader);
@@ -112,6 +175,27 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON string according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON string.
+	 */
+	public static ParserResult<JsonString> parseString(String string) {
+		Reader reader = new StringReader(string);
+		ParserResult<JsonString> res = parseString(reader);
+		try {
+			reader.close();
+		} catch (Throwable e) {
+			JsonParser.raiseUnexpected(e);
+		}
+		return res;
+	}
+	
+	/**
+	 * Construct a JSON number according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON number.
+	 */
 	public static ParserResult<JsonNumber> parseNumber(String string) {
 		Reader reader = new StringReader(string);
 		ParserResult<JsonNumber> res = parseNumber(reader);
@@ -123,6 +207,11 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON {@literal true} or {@literal false} value according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON {@literal true} or {@literal false} value.
+	 */
 	public static ParserResult<JsonBool> parseBool(String string) {
 		Reader reader = new StringReader(string);
 		ParserResult<JsonBool> res = parseBool(reader);
@@ -134,6 +223,11 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON {@literal null} value according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON {@literal null} value.
+	 */
 	public static ParserResult<JsonBase> parseNull(String string) {
 		Reader reader = new StringReader(string);
 		ParserResult<JsonBase> res = parseNull(reader);
@@ -146,6 +240,11 @@ public class JsonUtils {
 	}
 	
 	//And, Java is still sucking...
+	/**
+	 * Construct a JSON value according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON value.
+	 */
 	public static ParserResult<JsonBase> parseValue(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
 		ParserResult<JsonBase> res = parseValue(reader);
@@ -157,6 +256,11 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON object according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON object.
+	 */
 	public static ParserResult<JsonObject> parseObject(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
 		ParserResult<JsonObject> res = parseObject(reader);
@@ -168,6 +272,11 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON array according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON array.
+	 */
 	public static ParserResult<JsonArray> parseArray(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
 		ParserResult<JsonArray> res = parseArray(reader);
@@ -179,6 +288,27 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON string according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON string.
+	 */
+	public static ParserResult<JsonString> parseString(InputStream istream) {
+		Reader reader = new InputStreamReader(istream);
+		ParserResult<JsonString> res = parseString(reader);
+		try {
+			reader.close();
+		} catch (Throwable e) {
+			JsonParser.raiseUnexpected(e);
+		}
+		return res;
+	}
+	
+	/**
+	 * Construct a JSON number according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON number.
+	 */
 	public static ParserResult<JsonNumber> parseNumber(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
 		ParserResult<JsonNumber> res = parseNumber(reader);
@@ -190,6 +320,11 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON {@literal true} or {@literal false} value according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON {@literal true} or {@literal false} value.
+	 */
 	public static ParserResult<JsonBool> parseBool(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
 		ParserResult<JsonBool> res = parseBool(reader);
@@ -201,6 +336,11 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON {@literal null} value according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON {@literal null} value.
+	 */
 	public static ParserResult<JsonBase> parseNull(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
 		ParserResult<JsonBase> res = parseNull(reader);
@@ -213,6 +353,11 @@ public class JsonUtils {
 	}
 	
 	//Question, is Java savable?
+	/**
+	 * Construct a JSON value according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON value.
+	 */
 	public static ParserResult<JsonBase> farseValue(File file) {
 		try {
 			Reader reader = new FileReader(file);
@@ -226,6 +371,11 @@ public class JsonUtils {
 		return null;
 	}
 	
+	/**
+	 * Construct a JSON object according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON object.
+	 */
 	public static ParserResult<JsonObject> farseObject(File file) {
 		try {
 			Reader reader = new FileReader(file);
@@ -239,6 +389,11 @@ public class JsonUtils {
 		return null;
 	}
 	
+	/**
+	 * Construct a JSON array according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON array.
+	 */
 	public static ParserResult<JsonArray> farseArray(File file) {
 		try {
 			Reader reader = new FileReader(file);
@@ -252,6 +407,29 @@ public class JsonUtils {
 		return null;
 	}
 	
+	/**
+	 * Construct a JSON string according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON string.
+	 */
+	public static ParserResult<JsonString> farseString(File file) {
+		try {
+			Reader reader = new FileReader(file);
+			ParserResult<JsonString> res = parseString(reader);
+			reader.close();
+			return res;
+		} catch (Throwable e) {
+			JsonParser.raiseUnexpected(e);
+		}
+		//Never hit this
+		return null;
+	}
+	
+	/**
+	 * Construct a JSON number according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON number.
+	 */
 	public static ParserResult<JsonNumber> farseNumber(File file) {
 		try {
 			Reader reader = new FileReader(file);
@@ -265,6 +443,11 @@ public class JsonUtils {
 		return null;
 	}
 	
+	/**
+	 * Construct a JSON {@literal true} or {@literal false} value according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON {@literal true} or {@literal false} value.
+	 */
 	public static ParserResult<JsonBool> farseBool(File file) {
 		try {
 			Reader reader = new FileReader(file);
@@ -278,6 +461,11 @@ public class JsonUtils {
 		return null;
 	}
 	
+	/**
+	 * Construct a JSON {@literal null} value according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON {@literal null} value.
+	 */
 	public static ParserResult<JsonBase> farseNull(File file) {
 		try {
 			Reader reader = new FileReader(file);
@@ -292,26 +480,65 @@ public class JsonUtils {
 	}
 	
 	//Actually, Java always sucks
+	/**
+	 * Construct a JSON value according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON value.
+	 */
 	public static ParserResult<JsonBase> farseValue(String path) {
 		return farseValue(new File(path));
 	}
 	
+	/**
+	 * Construct a JSON object according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON object.
+	 */
 	public static ParserResult<JsonObject> farseObject(String path) {
 		return farseObject(new File(path));
 	}
 	
+	/**
+	 * Construct a JSON array according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON array.
+	 */
 	public static ParserResult<JsonArray> farseArray(String path) {
 		return farseArray(new File(path));
 	}
 	
+	/**
+	 * Construct a JSON string according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON string.
+	 */
+	public static ParserResult<JsonString> farseString(String path) {
+		return farseString(new File(path));
+	}
+	
+	/**
+	 * Construct a JSON number according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON number.
+	 */
 	public static ParserResult<JsonNumber> farseNumber(String path) {
 		return farseNumber(new File(path));
 	}
 	
+	/**
+	 * Construct a JSON {@literal true} or {@literal false} value according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON {@literal true} or {@literal false} value.
+	 */
 	public static ParserResult<JsonBool> farseBool(String path) {
 		return farseBool(new File(path));
 	}
 	
+	/**
+	 * Construct a JSON {@literal null} value according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON {@literal null} value.
+	 */
 	public static ParserResult<JsonBase> farseNull(String path) {
 		return farseNull(new File(path));
 	}
@@ -319,6 +546,11 @@ public class JsonUtils {
 	//Well, let's start again
 	
 	//Java sucks!
+	/**
+	 * Construct a JSON value according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON value.
+	 */
 	public static ParserResult<JsonBase> checkValue(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonBase> res = parser.parseValue(false);
@@ -328,6 +560,11 @@ public class JsonUtils {
 		return eof.succeeded ? res : eof;
 	}
 	
+	/**
+	 * Construct a JSON object according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON object.
+	 */
 	public static ParserResult<JsonObject> checkObject(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonObject> res = parser.parseObject(false);
@@ -337,6 +574,11 @@ public class JsonUtils {
 		return eof.succeeded ? res : eof;
 	}
 
+	/**
+	 * Construct a JSON array according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON array.
+	 */
 	public static ParserResult<JsonArray> checkArray(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonArray> res = parser.parseArray(false);
@@ -346,6 +588,25 @@ public class JsonUtils {
 		return eof.succeeded ? res : eof;
 	}
 	
+	/**
+	 * Construct a JSON string according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON string.
+	 */
+	public static ParserResult<JsonString> checkString(Reader reader) {
+		JsonParser parser = new JsonParser(reader);
+		ParserResult<JsonString> res = parser.parseString(false);
+		if (!res.succeeded)
+			return res;
+		ParserResult<JsonString> eof = parser.parseEOF();
+		return eof.succeeded ? res : eof;
+	}
+	
+	/**
+	 * Construct a JSON number according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON number.
+	 */
 	public static ParserResult<JsonNumber> checkNumber(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonNumber> res = parser.parseNumber(false);
@@ -355,6 +616,11 @@ public class JsonUtils {
 		return eof.succeeded ? res : eof;
 	}
 	
+	/**
+	 * Construct a JSON {@literal true} or {@literal false} value according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON {@literal true} or {@literal false} value.
+	 */
 	public static ParserResult<JsonBool> checkBool(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonBool> res = parser.parseBool(false);
@@ -364,6 +630,11 @@ public class JsonUtils {
 		return eof.succeeded ? res : eof;
 	}
 	
+	/**
+	 * Construct a JSON {@literal null} value according to given {@code Reader}.
+	 * @param reader The reader.
+	 * @return The JSON {@literal null} value.
+	 */
 	public static ParserResult<JsonBase> checkNull(Reader reader) {
 		JsonParser parser = new JsonParser(reader);
 		ParserResult<JsonBase> res = parser.parseNull(false);
@@ -374,9 +645,14 @@ public class JsonUtils {
 	}
 	
 	//So, Java sucks again...
+	/**
+	 * Construct a JSON value according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON value.
+	 */
 	public static ParserResult<JsonBase> checkValue(String string) {
 		Reader reader = new StringReader(string);
-		ParserResult<JsonBase> res = parseValue(reader);
+		ParserResult<JsonBase> res = checkValue(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -385,9 +661,14 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON object according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON object.
+	 */
 	public static ParserResult<JsonObject> checkObject(String string) {
 		Reader reader = new StringReader(string);
-		ParserResult<JsonObject> res = parseObject(reader);
+		ParserResult<JsonObject> res = checkObject(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -396,9 +677,14 @@ public class JsonUtils {
 		return res;
 	}	
 	
+	/**
+	 * Construct a JSON array according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON array.
+	 */
 	public static ParserResult<JsonArray> checkArray(String string) {
 		Reader reader = new StringReader(string);
-		ParserResult<JsonArray> res = parseArray(reader);
+		ParserResult<JsonArray> res = checkArray(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -407,9 +693,30 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON string according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON string.
+	 */
+	public static ParserResult<JsonString> checkString(String string) {
+		Reader reader = new StringReader(string);
+		ParserResult<JsonString> res = checkString(reader);
+		try {
+			reader.close();
+		} catch (Throwable e) {
+			JsonParser.raiseUnexpected(e);
+		}
+		return res;
+	}
+	
+	/**
+	 * Construct a JSON number according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON number.
+	 */
 	public static ParserResult<JsonNumber> checkNumber(String string) {
 		Reader reader = new StringReader(string);
-		ParserResult<JsonNumber> res = parseNumber(reader);
+		ParserResult<JsonNumber> res = checkNumber(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -418,9 +725,14 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON {@literal true} or {@literal false} value according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON {@literal true} or {@literal false} value.
+	 */
 	public static ParserResult<JsonBool> checkBool(String string) {
 		Reader reader = new StringReader(string);
-		ParserResult<JsonBool> res = parseBool(reader);
+		ParserResult<JsonBool> res = checkBool(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -429,9 +741,14 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON {@literal null} value according to given {@code String}.
+	 * @param string The string.
+	 * @return The JSON {@literal null} value.
+	 */
 	public static ParserResult<JsonBase> checkNull(String string) {
 		Reader reader = new StringReader(string);
-		ParserResult<JsonBase> res = parseNull(reader);
+		ParserResult<JsonBase> res = checkNull(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -441,9 +758,14 @@ public class JsonUtils {
 	}
 	
 	//And, Java is still sucking...
+	/**
+	 * Construct a JSON value according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON value.
+	 */
 	public static ParserResult<JsonBase> checkValue(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
-		ParserResult<JsonBase> res = parseValue(reader);
+		ParserResult<JsonBase> res = checkValue(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -452,9 +774,14 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON object according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON object.
+	 */
 	public static ParserResult<JsonObject> checkObject(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
-		ParserResult<JsonObject> res = parseObject(reader);
+		ParserResult<JsonObject> res = checkObject(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -463,9 +790,14 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON array according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON array.
+	 */
 	public static ParserResult<JsonArray> checkArray(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
-		ParserResult<JsonArray> res = parseArray(reader);
+		ParserResult<JsonArray> res = checkArray(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -474,9 +806,30 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON string according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON string.
+	 */
+	public static ParserResult<JsonString> checkString(InputStream istream) {
+		Reader reader = new InputStreamReader(istream);
+		ParserResult<JsonString> res = checkString(reader);
+		try {
+			reader.close();
+		} catch (Throwable e) {
+			JsonParser.raiseUnexpected(e);
+		}
+		return res;
+	}
+	
+	/**
+	 * Construct a JSON number according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON number.
+	 */
 	public static ParserResult<JsonNumber> checkNumber(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
-		ParserResult<JsonNumber> res = parseNumber(reader);
+		ParserResult<JsonNumber> res = checkNumber(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -485,9 +838,14 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON {@literal true} or {@literal false} value according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON {@literal true} or {@literal false} value.
+	 */
 	public static ParserResult<JsonBool> checkBool(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
-		ParserResult<JsonBool> res = parseBool(reader);
+		ParserResult<JsonBool> res = checkBool(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -496,9 +854,14 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * Construct a JSON {@literal null} value according to given {@code InputStream}.
+	 * @param istream The input stream.
+	 * @return The JSON {@literal null} value.
+	 */
 	public static ParserResult<JsonBase> checkNull(InputStream istream) {
 		Reader reader = new InputStreamReader(istream);
-		ParserResult<JsonBase> res = parseNull(reader);
+		ParserResult<JsonBase> res = checkNull(reader);
 		try {
 			reader.close();
 		} catch (Throwable e) {
@@ -508,10 +871,15 @@ public class JsonUtils {
 	}
 	
 	//Question, is Java savable?
+	/**
+	 * Construct a JSON value according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON value.
+	 */
 	public static ParserResult<JsonBase> fheckValue(File file) {
 		try {
 			Reader reader = new FileReader(file);
-			ParserResult<JsonBase> res = parseValue(reader);
+			ParserResult<JsonBase> res = checkValue(reader);
 			reader.close();
 			return res;
 		} catch (Throwable e) {
@@ -521,10 +889,15 @@ public class JsonUtils {
 		return null;
 	}
 	
+	/**
+	 * Construct a JSON object according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON object.
+	 */
 	public static ParserResult<JsonObject> fheckObject(File file) {
 		try {
 			Reader reader = new FileReader(file);
-			ParserResult<JsonObject> res = parseObject(reader);
+			ParserResult<JsonObject> res = checkObject(reader);
 			reader.close();
 			return res;
 		} catch (Throwable e) {
@@ -534,10 +907,15 @@ public class JsonUtils {
 		return null;
 	}
 	
+	/**
+	 * Construct a JSON array according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON array.
+	 */
 	public static ParserResult<JsonArray> fheckArray(File file) {
 		try {
 			Reader reader = new FileReader(file);
-			ParserResult<JsonArray> res = parseArray(reader);
+			ParserResult<JsonArray> res = checkArray(reader);
 			reader.close();
 			return res;
 		} catch (Throwable e) {
@@ -547,10 +925,33 @@ public class JsonUtils {
 		return null;
 	}
 	
+	/**
+	 * Construct a JSON string according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON string.
+	 */
+	public static ParserResult<JsonString> fheckString(File file) {
+		try {
+			Reader reader = new FileReader(file);
+			ParserResult<JsonString> res = checkString(reader);
+			reader.close();
+			return res;
+		} catch (Throwable e) {
+			JsonParser.raiseUnexpected(e);
+		}
+		//Never hit this
+		return null;
+	}
+	
+	/**
+	 * Construct a JSON number according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON number.
+	 */
 	public static ParserResult<JsonNumber> fheckNumber(File file) {
 		try {
 			Reader reader = new FileReader(file);
-			ParserResult<JsonNumber> res = parseNumber(reader);
+			ParserResult<JsonNumber> res = checkNumber(reader);
 			reader.close();
 			return res;
 		} catch (Throwable e) {
@@ -560,10 +961,15 @@ public class JsonUtils {
 		return null;
 	}
 	
+	/**
+	 * Construct a JSON {@literal true} or {@literal false} value according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON {@literal true} or {@literal false} value.
+	 */
 	public static ParserResult<JsonBool> fheckBool(File file) {
 		try {
 			Reader reader = new FileReader(file);
-			ParserResult<JsonBool> res = parseBool(reader);
+			ParserResult<JsonBool> res = checkBool(reader);
 			reader.close();
 			return res;
 		} catch (Throwable e) {
@@ -573,10 +979,15 @@ public class JsonUtils {
 		return null;
 	}
 	
+	/**
+	 * Construct a JSON {@literal null} value according to given {@code File}.
+	 * @param file The file.
+	 * @return The JSON {@literal null} value.
+	 */
 	public static ParserResult<JsonBase> fheckNull(File file) {
 		try {
 			Reader reader = new FileReader(file);
-			ParserResult<JsonBase> res = parseNull(reader);
+			ParserResult<JsonBase> res = checkNull(reader);
 			reader.close();
 			return res;
 		} catch (Throwable e) {
@@ -587,28 +998,67 @@ public class JsonUtils {
 	}
 	
 	//Actually, Java always sucks
+	/**
+	 * Construct a JSON value according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON value.
+	 */
 	public static ParserResult<JsonBase> fheckValue(String path) {
-		return farseValue(new File(path));
+		return fheckValue(new File(path));
 	}
 	
+	/**
+	 * Construct a JSON object according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON object.
+	 */
 	public static ParserResult<JsonObject> fheckObject(String path) {
-		return farseObject(new File(path));
+		return fheckObject(new File(path));
 	}
 	
+	/**
+	 * Construct a JSON array according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON array.
+	 */
 	public static ParserResult<JsonArray> fheckArray(String path) {
-		return farseArray(new File(path));
+		return fheckArray(new File(path));
 	}
 	
+	/**
+	 * Construct a JSON string according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON string.
+	 */
+	public static ParserResult<JsonString> fheckString(String path) {
+		return fheckString(new File(path));
+	}
+	
+	/**
+	 * Construct a JSON number according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON number.
+	 */
 	public static ParserResult<JsonNumber> fheckNumber(String path) {
-		return farseNumber(new File(path));
+		return fheckNumber(new File(path));
 	}
 	
+	/**
+	 * Construct a JSON {@literal true} or {@literal false} value according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON {@literal true} or {@literal false} value.
+	 */
 	public static ParserResult<JsonBool> fheckBool(String path) {
-		return farseBool(new File(path));
+		return fheckBool(new File(path));
 	}
 	
+	/**
+	 * Construct a JSON {@literal null} value according to the {@code File} at given path.
+	 * @param path The path to the file.
+	 * @return The JSON {@literal null} value.
+	 */
 	public static ParserResult<JsonBase> fheckNull(String path) {
-		return farseNull(new File(path));
+		return fheckNull(new File(path));
 	}
 	
 	//Finally, I found that Windows Notepad is a good editor
@@ -616,6 +1066,12 @@ public class JsonUtils {
 	//Don't ask me "Why do you use reflect"
 	//^=Although reflect sucks, I have no other choice
 	
+	/**
+	 * Translate an {@code Object} to a JSON value.<br>
+	 * If the {@code obj} is not supported by "specialization", it can implement {@link Jsonizable}
+	 * @param obj The object.
+	 * @return The JSON value.
+	 */
 	public static JsonBase toJson(Object obj) {
 		if (obj == null)
 			return null;
@@ -668,52 +1124,71 @@ public class JsonUtils {
 		if (obj instanceof Object[])
 			return toJson((Object[]) obj);
 		
-		try {
-			Class<?> clazz = obj.getClass();
-			Method mToJson = clazz.getMethod("toJson");
-			Object res = mToJson.invoke(obj);
-			if (res instanceof JsonBase)
-				return (JsonBase) res;
-			throw new RuntimeException("obj.toJson() must return <? extends JsonBase>");
-		}
-		catch (Throwable e) {
-			throw new IllegalArgumentException("Unsupported type: " + obj.getClass().getName(), e);
-		}
+		if (obj instanceof Jsonizable)
+			return ((Jsonizable) obj).toJson();
 		
+		throw new IllegalArgumentException("Unsupported type: " + obj.getClass().getName());		
 	}
 	
+	/**
+	 * @return A {@code JsonBool}.
+	 */
 	public static JsonBool toJson(boolean b) {
 		return new JsonBool(b);
 	}
 	
+	/**
+	 * @return A {@code JsonNumber}.
+	 */
 	public static JsonNumber toJson(byte b) {
 		return new JsonNumber(b);
 	}
 	
+	/**
+	 * @return A {@code JsonString}.
+	 */
 	public static JsonString toJson(char c) {
 		return new JsonString(String.valueOf(c));
 	}
 	
+	/**
+	 * @return A {@code JsonNumber}.
+	 */
 	public static JsonNumber toJson(double d) {
 		return new JsonNumber(d);
 	}
 	
+	/**
+	 * @return A {@code JsonNumber}.
+	 */
 	public static JsonNumber toJson(float f) {
 		return new JsonNumber(f);
 	}
 	
+	/**
+	 * @return A {@code JsonNumber}.
+	 */
 	public static JsonNumber toJson(int i) {
 		return new JsonNumber(i);
 	}
 	
+	/**
+	 * @return A {@code JsonNumber}.
+	 */
 	public static JsonNumber toJson(long l) {
 		return new JsonNumber(l);
 	}
 	
+	/**
+	 * @return A {@code JsonNumber}.
+	 */
 	public static JsonNumber toJson(short s) {
 		return new JsonNumber(s);
 	}
 	
+	/**
+	 * @return A {@code JsonArray} consisting of {@code JsonBool}.
+	 */
 	public static JsonArray toJson(boolean[] bs) {
 		JsonArray res = new JsonArray();
 		for (boolean b : bs)
@@ -721,6 +1196,9 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * @return A {@code JsonArray} consisting of {@code JsonNumber}.
+	 */
 	public static JsonArray toJson(byte[] bs) {
 		JsonArray res = new JsonArray();
 		for (byte b : bs)
@@ -728,14 +1206,19 @@ public class JsonUtils {
 		return res;
 	}
 	
-	public static JsonString toJson(char[] cs) {
-		return new JsonString(String.valueOf(cs));
+	/**
+	 * @return A {@code JsonArray} consisting of {@code JsonString}.
+	 */
+	public static JsonArray toJson(char[] cs) {
+		JsonArray res = new JsonArray();
+		for (char c: cs)
+			res.add(new JsonString(String.valueOf(c)));
+		return res;
 	}
 	
-	public static JsonString toJson(String str) {
-		return new JsonString(str);
-	}
-	
+	/**
+	 * @return A {@code JsonArray} consisting of {@code JsonNumber}.
+	 */
 	public static JsonArray toJson(double[] ds) {
 		JsonArray res = new JsonArray();
 		for (double d : ds)
@@ -743,6 +1226,9 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * @return A {@code JsonArray} consisting of {@code JsonNumber}.
+	 */
 	public static JsonArray toJson(float[] fs) {
 		JsonArray res = new JsonArray();
 		for (float f : fs)
@@ -750,6 +1236,9 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * @return A {@code JsonArray} consisting of {@code JsonNumber}.
+	 */
 	public static JsonArray toJson(int[] is) {
 		JsonArray res = new JsonArray();
 		for (double i : is)
@@ -757,6 +1246,9 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * @return A {@code JsonArray} consisting of {@code JsonNumber}.
+	 */
 	public static JsonArray toJson(long[] ls) {
 		JsonArray res = new JsonArray();
 		for (double l : ls)
@@ -764,6 +1256,9 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * @return A {@code JsonArray} consisting of {@code JsonNumber}.
+	 */
 	public static JsonArray toJson(short[] ss) {
 		JsonArray res = new JsonArray();
 		for (double s : ss)
@@ -771,10 +1266,27 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * @return A {@code JsonString}.
+	 */
+	public static JsonString toJson(String str) {
+		return new JsonString(str);
+	}
+	
+	/**
+	 * Convert an {@code Entry} to a two-value JSON array {@code [KEY, VALUE]}.
+	 * @return A {@code JsonArray} consisting two values.
+	 */
 	public static JsonArray toJson(Entry<?, ?> entry) {
 		return new JsonArray(entry.getKey(), entry.getValue());
 	}
 	
+	/**
+	 * Convert an {@code Map} to a JSON object.<br>
+	 * The string part of each pair will be obtaind by {@code KEY.toString()}.
+	 * {@literal null} KEY is not allowed.
+	 * @return A {@code JsonObject} or {@literal null}.
+	 */
 	public static JsonObject toJson(Map<?, ?> map) {
 		JsonObject res = new JsonObject();
 		for (Entry<?, ?> e : map.entrySet()) {
@@ -788,6 +1300,9 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * @return A {@code JsonArray} representing the given {@code List}.
+	 */
 	public static JsonArray toJson(List<?> list) {
 		JsonArray res = new JsonArray();
 		for (Object o : list)
@@ -795,6 +1310,9 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * @return A {@code JsonArray} representing the given {@code Array}.
+	 */
 	public static JsonArray toJson(Object[] objs) {
 		JsonArray res = new JsonArray();
 		for (Object o : objs)
@@ -802,22 +1320,44 @@ public class JsonUtils {
 		return res;
 	}
 	
+	/**
+	 * @return The {@code Object} unwrapped from given JSON value, {@literal null} for {@literal null} argument.
+	 */
 	public static Object unwrap(JsonBase json) {
 		return json == null ? null : json.unwrap();
 	}
 	
+	/**
+	 * @return The {@code Map} unwrapped from given JSON object, {@literal null} for {@literal null} argument.
+	 */
 	public static Map<String, Object> unwrap(JsonObject json) {
 		return json == null ? null : json.unwrap();
 	}
 	
+	/**
+	 * @return The {@code Array} unwrapped from given JSON array, {@literal null} for {@literal null} argument.
+	 */
 	public static Object[] unwrap(JsonArray json) {
 		return json == null ? null : json.unwrap();
 	}
 	
+	/**
+	 * @return The {@code String} unwrapped from given JSON string, {@literal null} for {@literal null} argument.
+	 */
+	public static String unwrap(JsonString json) {
+		return json == null ? null : json.unwrap();
+	}
+	
+	/**
+	 * @return The {@code Double} unwrapped from given JSON number, {@literal null} for {@literal null} argument.
+	 */
 	public static Double unwrap(JsonNumber json) {
 		return json == null ? null : json.unwrap();
 	}
 	
+	/**
+	 * @return The {@code Boolean} unwrapped from given JSON {@literal true} or {@literal false} value, {@literal null} for {@literal null} argument.
+	 */
 	public static Boolean unwrap(JsonBool json) {
 		return json == null ? null : json.unwrap();
 	}
