@@ -19,14 +19,14 @@ This project requires JDK7 to build.
 4. Get the artifacts in ```build/libs```
 
 ## JSON values
-Any JSON value ```v``` can be represented by a ```JsonBase```.
-If ```v``` is ```null```, it's a JSON ```null``` value.
-If ```v``` is an instance of ```JsonObject```, it's a JSON object.
-If ```v``` is an instance of ```JsonArray```, it's a JSON array.
-If ```v``` is an instance of ```JsonString```, it's a JSON string.
-If ```v``` is an instance of ```JsonNumber```, it's a JSON number.
-If ```v``` is an instance of ```JsonBool```, it's a JSON ```true``` value when ```v.data``` is ```true```.
-If ```v``` is an instance of ```JsonBool```, it's a JSON ```false``` value when ```v.data``` is ```false```.
+Any JSON value ```v``` can be represented by a ```JsonBase```.  
+If ```v``` is ```null```, it's a JSON ```null``` value.  
+If ```v``` is an instance of ```JsonObject```, it's a JSON object.  
+If ```v``` is an instance of ```JsonArray```, it's a JSON array.  
+If ```v``` is an instance of ```JsonString```, it's a JSON string.  
+If ```v``` is an instance of ```JsonNumber```, it's a JSON number.  
+If ```v``` is an instance of ```JsonBool```, it's a JSON ```true``` value when ```v.data``` is ```true```.  
+If ```v``` is an instance of ```JsonBool```, it's a JSON ```false``` value when ```v.data``` is ```false```.  
 
 ## Detailed usage
 Refer to comments in source
