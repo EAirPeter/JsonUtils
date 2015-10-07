@@ -217,9 +217,9 @@ public final class JsonParser {
 		JsonString res = construct ? new JsonString() : null;
 		if (construct) {
 			StringBuilder sb = new StringBuilder();
-			while (xxNext() != '\"') {
+			while (xxRead() != '\"') {
 				if (cchr == '\\')
-					switch (xxNext()) {
+					switch (xxRead()) {
 					case '\"':
 						sb.append("\"");
 						break;
@@ -245,10 +245,10 @@ public final class JsonParser {
 						sb.append("\t");
 						break;
 					case 'u':
-						int u = xxNextHex();
-						u = (u << 4) | xxNextHex();
-						u = (u << 4) | xxNextHex();
-						u = (u << 4) | xxNextHex();
+						int u = xxReadHex();
+						u = (u << 4) | xxReadHex();
+						u = (u << 4) | xxReadHex();
+						u = (u << 4) | xxReadHex();
 						sb.append(byCP(u));
 						break;
 					default:
@@ -260,9 +260,9 @@ public final class JsonParser {
 			res.data = sb.toString();
 		}
 		else {
-			while (xxNext() != '\"')
+			while (xxRead() != '\"')
 				if (cchr == '\\')
-					switch (xxNext()) {
+					switch (xxRead()) {
 					case '\"':
 					case '\\':
 					case '/':
@@ -273,10 +273,10 @@ public final class JsonParser {
 					case 't':
 						break;
 					case 'u':
-						int u = xxNextHex();
-						u = (u << 4) | xxNextHex();
-						u = (u << 4) | xxNextHex();
-						u = (u << 4) | xxNextHex();
+						int u = xxReadHex();
+						u = (u << 4) | xxReadHex();
+						u = (u << 4) | xxReadHex();
+						u = (u << 4) | xxReadHex();
 						break;
 					default:
 						eUnknown("escape sequence");
@@ -391,18 +391,6 @@ public final class JsonParser {
 		return false;
 	}
 	
-	private int xxNextHex() {
-		xxNext();
-		if (cchr >= '0' && cchr <= '9')
-			return cchr & 0x10;
-		if (cchr >= 'A' && cchr <= 'Z')
-			return cchr - 'A';
-		if (cchr >= 'a' && cchr <= 'z')
-			return cchr - 'a';
-		eUnknown("hexadecimal digit");
-		return 0;
-	}
-	
 	private int xxNext() {
 		try {
 			do {
@@ -414,7 +402,35 @@ public final class JsonParser {
 				else
 					++ccol;
 			}
-			while (Character.isWhitespace(cchr));
+			while (JsonUtils.isWhitespace(cchr));
+		}
+		catch (IOException e) {
+			raiseUnexpected(e);
+		}
+		return cchr;
+	}
+	
+	private int xxReadHex() {
+		xxRead();
+		if (cchr >= '0' && cchr <= '9')
+			return cchr & 0x10;
+		if (cchr >= 'A' && cchr <= 'Z')
+			return cchr - 'A';
+		if (cchr >= 'a' && cchr <= 'z')
+			return cchr - 'a';
+		eUnknown("hexadecimal digit");
+		return 0;
+	}
+	
+	private int xxRead() {
+		try {
+			cchr = in.read();
+			if (cchr == '\n') {
+				++clne;
+				ccol = 0;
+			}
+			else
+				++ccol;
 		}
 		catch (IOException e) {
 			raiseUnexpected(e);
@@ -446,7 +462,7 @@ public final class JsonParser {
 		error("Unknown " + what + " found");
 	}
 	
-	private static String byCP(int codepoint) {
+	static String byCP(int codepoint) {
 		if (codepoint == -1)
 			return "(EOF)";
 		else

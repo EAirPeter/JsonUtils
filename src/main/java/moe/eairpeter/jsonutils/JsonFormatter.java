@@ -1,6 +1,9 @@
 package moe.eairpeter.jsonutils;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Map.Entry;
+import java.util.Stack;
 
 import moe.eairpeter.jsonutils.parsed.JsonArray;
 import moe.eairpeter.jsonutils.parsed.JsonBase;
@@ -246,6 +249,176 @@ public final class JsonFormatter {
 	 */
 	public String getIndent() {
 		return indent;
+	}
+	
+	/**
+	 * Construct a formatted string according to given JSON {@code Reader}.<br>
+	 * Assuming the input is valid.<br>
+	 * Invalid input may cause {@literal null} or unexpected result.
+	 * @param reader The reader.
+	 * @return The formatted string.
+	 */
+	public String formatUnsafe(Reader reader) {
+		StringBuilder sb = new StringBuilder();
+		Stack<Character> sc = new Stack<Character>();
+		Stack<String> si = new Stack<String>();
+		si.push("\n");
+		int cu = xNext(reader);
+		while (cu != -1) {
+			switch (cu) {
+			case '{':
+				sb.append('{');
+				cu = xNext(reader);
+				if (cu == '}') {
+					if (enabled(LF_EBRACE))
+						sb.append(si.peek());
+					else if (enabled(WS_EBRACE))
+						sb.append(' ');
+					sb.append('}');
+					cu = xNext(reader);
+				}
+				else {
+					sc.push('{');
+					si.push(si.peek() + indent);
+					if (enabled(LF_LBRACE))
+						sb.append(si.peek());
+					else if (enabled(WS_LBRACE))
+						sb.append(' ');
+				}
+				break;
+			case '}':
+				if (sc.empty() || sc.peek() != '{')
+					return null;
+				sc.pop();
+				si.pop();
+				if (enabled(LF_RBRACE))
+					sb.append(si.peek());
+				else if (enabled(WS_RBRACE))
+					sb.append(' ');
+				sb.append('}');
+				break;
+			case '[':
+				sb.append('[');
+				cu = xNext(reader);
+				if (cu == ']') {
+					if (enabled(LF_ESQUARE))
+						sb.append(si.peek());
+					else if (enabled(WS_ESQUARE))
+						sb.append(' ');
+					sb.append(']');
+					cu = xNext(reader);
+				}
+				else {
+					sc.push('[');
+					si.push(si.peek() + indent);
+					if (enabled(LF_LSQUARE))
+						sb.append(si.peek());
+					else if (enabled(WS_LSQUARE))
+						sb.append(' ');
+				}
+				break;
+			case ']':
+				if (sc.empty() || sc.peek() != ']')
+					return null;
+				sc.pop();
+				si.pop();
+				if (enabled(LF_RSQUARE))
+					sb.append(si.peek());
+				else if (enabled(WS_RSQUARE))
+					sb.append(' ');
+				sb.append(']');
+				break;
+			case ':':
+				if (sc.empty() || sc.peek() != '{')
+					return null;
+				if (enabled(LF_BCOLON))
+					sb.append(si.peek());
+				else if (enabled(WS_BCOLON))
+					sb.append(' ');
+				sb.append(':');
+				if (enabled(LF_ACOLON))
+					sb.append(si.peek());
+				else if (enabled(WS_ACOLON))
+					sb.append(' ');
+				cu = xNext(reader);
+				break;
+			case ',':
+				if (sc.empty())
+					return null;
+				switch (sc.peek()) {
+				case '{':
+					if (enabled(LF_BOCOMMA))
+						sb.append(si.peek());
+					else if (enabled(WS_BOCOMMA))
+						sb.append(' ');
+					sb.append(',');
+					if (enabled(LF_AOCOMMA))
+						sb.append(si.peek());
+					else if (enabled(WS_AOCOMMA))
+						sb.append(' ');
+					break;
+				case '[':
+					if (enabled(LF_BACOMMA))
+						sb.append(si.peek());
+					else if (enabled(WS_BACOMMA))
+						sb.append(' ');
+					sb.append(',');
+					if (enabled(LF_AACOMMA))
+						sb.append(si.peek());
+					else if (enabled(WS_AACOMMA))
+						sb.append(' ');
+					break;
+				default:
+					return null;
+				}
+				cu = xNext(reader);
+				break;
+			case '\"':
+				while ((cu = xRead(reader)) != '\"') {
+					if (cu == -1)
+						return null;
+					sb.append(JsonParser.byCP(cu));
+					if (cu == '\\')
+						sb.append(JsonParser.byCP(xRead(reader)));
+				}
+				cu = xNext(reader);
+				break;
+			default:
+				while (cu != -1 && !JsonUtils.isWhitespace(cu) && !JsonUtils.isStructural(cu)) {
+					sb.append(cu);
+					cu = xRead(reader);
+				}
+				if (JsonUtils.isWhitespace(cu))
+					cu = xNext(reader);
+				break;
+			}
+		}
+		return sb.toString();
+	}
+	
+	private static int xNext(Reader reader) {
+		int cu = -1;
+		try {
+			do {
+				cu = reader.read();
+			}
+			while (JsonUtils.isWhitespace(cu));
+		}
+		catch (IOException e) {
+			cu = -1;
+		}
+		return cu;
+	}
+	
+	private static int xRead(Reader reader) {
+		int cu = -1;
+		try {
+			cu = reader.read();
+		}
+		catch (IOException e) {
+			cu = -1;
+		}
+		return cu;
 	}
 	
 	/**

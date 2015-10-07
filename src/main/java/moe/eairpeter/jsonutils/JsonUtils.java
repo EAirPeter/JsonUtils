@@ -19,7 +19,7 @@ import moe.eairpeter.jsonutils.parsed.JsonObject;
 import moe.eairpeter.jsonutils.parsed.JsonString;
 
 /**
- * Contains some useful JSON methods.
+ * Containing some useful JSON methods.
  * @author EAirPeter
  */
 public final class JsonUtils {
@@ -1360,6 +1360,20 @@ public final class JsonUtils {
 	 */
 	public static Boolean unwrap(JsonBool json) {
 		return json == null ? null : json.unwrap();
+	}
+	
+	/**
+	 * @return {@literal true} if {@code codepoint} is a valid JSON whitespace.
+	 */
+	public static boolean isWhitespace(int codepoint) {
+		return codepoint == ' ' || codepoint == '\t' || codepoint == '\n' || codepoint == '\r';
+	}
+	
+	/**
+	 * @return {@literal true} if {@code codepoint} is a valid JSON structural token.
+	 */
+	public static boolean isStructural(int codepoint) {
+		return codepoint == '[' || codepoint == '{' || codepoint == ']' || codepoint == '}' || codepoint == ':' || codepoint == ',';
 	}
 	
 }
