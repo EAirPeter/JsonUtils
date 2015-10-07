@@ -1241,7 +1241,7 @@ public final class JsonUtils {
 	 */
 	public static JsonArray toJson(int[] is) {
 		JsonArray res = new JsonArray();
-		for (double i : is)
+		for (int i : is)
 			res.add(new JsonNumber(i));
 		return res;
 	}
@@ -1251,7 +1251,7 @@ public final class JsonUtils {
 	 */
 	public static JsonArray toJson(long[] ls) {
 		JsonArray res = new JsonArray();
-		for (double l : ls)
+		for (long l : ls)
 			res.add(new JsonNumber(l));
 		return res;
 	}
@@ -1261,7 +1261,7 @@ public final class JsonUtils {
 	 */
 	public static JsonArray toJson(short[] ss) {
 		JsonArray res = new JsonArray();
-		for (double s : ss)
+		for (short s : ss)
 			res.add(new JsonNumber(s));
 		return res;
 	}
