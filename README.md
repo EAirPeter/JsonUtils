@@ -7,16 +7,17 @@ This project follows [ECMA-404](http://www.ecma-international.org/publications/f
 ## Features
 1. Translate JSON string or file to JSON values.
 2. Translate some Java Objects to JSON values.
-3. Format a JSON string or file.
-4. Validate a JSON string or file.
+3. Unwrap JSON values to Java Objects.
+4. Format a JSON string or file.
+5. Validate a JSON string or file.
 
 ## Build
 This project requires JDK7 to build.
 
-1. Run ```git clone https://github.com/EAirPeter/JsonUtils.git```
-2. Run ```cd JsonUtils```
-3. Run ```gradlew build```
-4. Get the artifacts in ```build/libs```
+* First, clone this project to local.
+* Run ```gradlew build``` and get the artifacts in ```build/libs```.
+* Alternatively, Run ```gradlew install``` to build the project and install the artifacts into local maven repository.
+* The artifacts consist of binary jar(```JsonUtils-VER.jar```) and source jar(```JsonUtils-VER-src.jar```).
 
 ## JSON values
 Any JSON value ```v``` can be represented by a ```JsonBase```.  
@@ -29,4 +30,4 @@ If ```v``` is an instance of ```JsonBool```, it's a JSON ```true``` value when `
 If ```v``` is an instance of ```JsonBool```, it's a JSON ```false``` value when ```v.data``` is ```false```.  
 
 ## Detailed usage
-Refer to comments in source
+Refer to comments in source.
