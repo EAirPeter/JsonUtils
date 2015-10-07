@@ -214,77 +214,36 @@ public final class JsonParser {
 	private JsonString xParseString(boolean construct) {
 		if (!xxExpect('\"'))
 			throw new RuntimeException("Failed to parse");
-		JsonString res = construct ? new JsonString() : null;
-		if (construct) {
-			StringBuilder sb = new StringBuilder();
-			while (xxRead() != '\"') {
-				if (cchr == '\\')
-					switch (xxRead()) {
-					case '\"':
-						sb.append("\"");
-						break;
-					case '\\':
-						sb.append("\\");
-						break;
-					case '/':
-						sb.append("/");
-						break;
-					case 'b':
-						sb.append("\b");
-						break;
-					case 'f':
-						sb.append("\f");
-						break;
-					case 'n':
-						sb.append("\n");
-						break;
-					case 'r':
-						sb.append("\r");
-						break;
-					case 't':
-						sb.append("\t");
-						break;
-					case 'u':
-						int u = xxReadHex();
-						u = (u << 4) | xxReadHex();
-						u = (u << 4) | xxReadHex();
-						u = (u << 4) | xxReadHex();
-						sb.append(byCP(u));
-						break;
-					default:
-						eUnknown("escape sequence");
-					}
-				else
-					sb.append(byCP(cchr));
+		StringBuilder sb = construct ? new StringBuilder() : null;
+		while (xxRead() != '\"') {
+			if (construct)
+				sb.append(byCP(cchr));
+			if (cchr == '\\') {
+				sb.append(byCP(xxRead()));
+				switch (cchr) {
+				case '\"':
+				case '\\':
+				case '/':
+				case 'b':
+				case 'f':
+				case 'n':
+				case 'r':
+				case 't':
+					break;
+				case 'u':
+					sb.append(byCP(xxReadHex()));
+					sb.append(byCP(xxReadHex()));
+					sb.append(byCP(xxReadHex()));
+					sb.append(byCP(xxReadHex()));
+					break;
+				default:
+					eUnknown("escape sequence");
+				}
 			}
-			res.data = sb.toString();
-		}
-		else {
-			while (xxRead() != '\"')
-				if (cchr == '\\')
-					switch (xxRead()) {
-					case '\"':
-					case '\\':
-					case '/':
-					case 'b':
-					case 'f':
-					case 'n':
-					case 'r':
-					case 't':
-						break;
-					case 'u':
-						int u = xxReadHex();
-						u = (u << 4) | xxReadHex();
-						u = (u << 4) | xxReadHex();
-						u = (u << 4) | xxReadHex();
-						break;
-					default:
-						eUnknown("escape sequence");
-					}
 		}
 		xxExpect('\"');
 		xxNext();
-		return res;
+		return construct ? new JsonString(sb.toString()) : null;
 	}
 	
 	private JsonNumber xParseNumber(boolean construct) {
@@ -319,7 +278,7 @@ public final class JsonParser {
 			}
 			else
 				eUnknown("number");
-			return new JsonNumber(Double.valueOf(sb.toString()));
+			return new JsonNumber(sb.toString());
 		}
 		if (cchr == '-')
 			xxNext();
@@ -413,11 +372,11 @@ public final class JsonParser {
 	private int xxReadHex() {
 		xxRead();
 		if (cchr >= '0' && cchr <= '9')
-			return cchr & 0x10;
+			return cchr;
 		if (cchr >= 'A' && cchr <= 'Z')
-			return cchr - 'A';
+			return cchr;
 		if (cchr >= 'a' && cchr <= 'z')
-			return cchr - 'a';
+			return cchr;
 		eUnknown("hexadecimal digit");
 		return 0;
 	}
@@ -462,7 +421,7 @@ public final class JsonParser {
 		error("Unknown " + what + " found");
 	}
 	
-	static String byCP(int codepoint) {
+	public static String byCP(int codepoint) {
 		if (codepoint == -1)
 			return "(EOF)";
 		else

@@ -208,6 +208,15 @@ public final class JsonFormatter {
 	}
 	
 	/**
+	 * Test an format option is enabled.
+	 * @param option The format option.
+	 * @return {@literal true} if given option is enabled.
+	 */
+	public boolean enabled(int option) {
+		return (format & option) != 0;
+	}
+	
+	/**
 	 * Toggle a format option.
 	 * @param option The format option.
 	 * @return This object.
@@ -296,6 +305,7 @@ public final class JsonFormatter {
 				else if (enabled(WS_RBRACE))
 					sb.append(' ');
 				sb.append('}');
+				cu = xNext(reader);
 				break;
 			case '[':
 				sb.append('[');
@@ -318,7 +328,7 @@ public final class JsonFormatter {
 				}
 				break;
 			case ']':
-				if (sc.empty() || sc.peek() != ']')
+				if (sc.empty() || sc.peek() != '[')
 					return null;
 				sc.pop();
 				si.pop();
@@ -327,6 +337,7 @@ public final class JsonFormatter {
 				else if (enabled(WS_RSQUARE))
 					sb.append(' ');
 				sb.append(']');
+				cu = xNext(reader);
 				break;
 			case ':':
 				if (sc.empty() || sc.peek() != '{')
@@ -374,6 +385,7 @@ public final class JsonFormatter {
 				cu = xNext(reader);
 				break;
 			case '\"':
+				sb.append('\"');
 				while ((cu = xRead(reader)) != '\"') {
 					if (cu == -1)
 						return null;
@@ -381,11 +393,12 @@ public final class JsonFormatter {
 					if (cu == '\\')
 						sb.append(JsonParser.byCP(xRead(reader)));
 				}
+				sb.append('\"');
 				cu = xNext(reader);
 				break;
 			default:
 				while (cu != -1 && !JsonUtils.isWhitespace(cu) && !JsonUtils.isStructural(cu)) {
-					sb.append(cu);
+					sb.append(JsonParser.byCP(cu));
 					cu = xRead(reader);
 				}
 				if (JsonUtils.isWhitespace(cu))
@@ -542,10 +555,6 @@ public final class JsonFormatter {
 	
 	private StringBuilder xFormatBool(StringBuilder sb, JsonBool json, String ind) {
 		return sb.append(json.toString());
-	}
-	
-	private boolean enabled(int option) {
-		return (format & option) != 0;
 	}
 	
 }
