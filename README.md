@@ -30,4 +30,4 @@ If ```v``` is an instance of ```JsonBool```, it's a JSON ```true``` value when `
 If ```v``` is an instance of ```JsonBool```, it's a JSON ```false``` value when ```v.data``` is ```false```.  
 
 ## Detailed usage
-Refer to comments in source.
+Refer to javadoc.
