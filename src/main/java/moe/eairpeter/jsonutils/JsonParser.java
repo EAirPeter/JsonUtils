@@ -251,28 +251,28 @@ public final class JsonParser {
 			StringBuilder sb = new StringBuilder();
 			if (cchr == '-') {
 				sb.append(byCP(cchr));
-				xxNext();
+				xxRead();
 			}
 			if (Character.isDigit(cchr)) {
 				sb.append(byCP(cchr));
 				if (cchr == '0')
-					xxNext();
+					xxRead();
 				else
-					while (Character.isDigit(xxNext()))
+					while (Character.isDigit(xxRead()))
 						sb.append(byCP(cchr));
 				if (cchr == '.') {
 					sb.append(byCP(cchr));
-					while (Character.isDigit(xxNext()))
+					while (Character.isDigit(xxRead()))
 						sb.append(byCP(cchr));
 				}
 				if (cchr == 'E' || cchr == 'e') {
 					sb.append(byCP(cchr));
-					xxNext();
+					xxRead();
 					if (cchr == '+' || cchr == '-') {
 						sb.append(byCP(cchr));
-						xxNext();
+						xxRead();
 					}
-					while (Character.isDigit(xxNext()))
+					while (Character.isDigit(xxRead()))
 						sb.append(byCP(cchr));
 				}
 			}
@@ -281,17 +281,17 @@ public final class JsonParser {
 			return new JsonNumber(sb.toString());
 		}
 		if (cchr == '-')
-			xxNext();
+			xxRead();
 		if (Character.isDigit(cchr)) {
 			if (cchr != '0')
-				while (Character.isDigit(xxNext()));
+				while (Character.isDigit(xxRead()));
 			if (cchr == '.')
-				while (Character.isDigit(xxNext()));
+				while (Character.isDigit(xxRead()));
 			if (cchr == 'E' || cchr == 'e') {
-				xxNext();
+				xxRead();
 				if (cchr == '+' || cchr == '-')
-					xxNext();
-				while (Character.isDigit(xxNext()));
+					xxRead();
+				while (Character.isDigit(xxRead()));
 			}
 		}
 		else
@@ -323,7 +323,7 @@ public final class JsonParser {
 	}
 	
 	private boolean xParseMatch(String string) {
-		for (int i = 0; i < string.length(); ++i, xxNext())
+		for (int i = 0; i < string.length(); ++i, xxRead())
 			if (string.charAt(i) != cchr)
 				return false;
 		return true;
@@ -331,8 +331,8 @@ public final class JsonParser {
 	
 	private boolean xParseToEnd() {
 		boolean res = true;
-		while (Character.isJavaIdentifierPart(cchr)) {
-			xxNext();
+		while (!JsonUtils.isWhitespace(cchr) && !JsonUtils.isStructural(cchr)) {
+			xxRead();
 			res = false;
 		}
 		return res;
@@ -340,7 +340,6 @@ public final class JsonParser {
 	
 	private void xPrepare() {
 		errors.clear();
-		//xxNext();
 	}
 	
 	private boolean xxExpect(int chr) {
