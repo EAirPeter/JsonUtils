@@ -272,12 +272,15 @@ public final class JsonParser {
 						sb.append(byCP(cchr));
 						xxRead();
 					}
+					sb.append(byCP(cchr));
 					while (Character.isDigit(xxRead()))
 						sb.append(byCP(cchr));
 				}
 			}
 			else
 				eUnknown("number");
+			if (JsonUtils.isWhitespace(cchr))
+				xxNext();
 			return new JsonNumber(sb.toString());
 		}
 		if (cchr == '-')
@@ -296,6 +299,8 @@ public final class JsonParser {
 		}
 		else
 			eUnknown("number");
+		if (JsonUtils.isWhitespace(cchr))
+			xxNext();
 		return null;
 	}
 	
